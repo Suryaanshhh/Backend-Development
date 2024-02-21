@@ -1,3 +1,5 @@
+const Product=require('../models/products')
+
 const express=require("express");
 const router=express.Router();
 const parsedBody=require('body-parser');
@@ -10,6 +12,8 @@ router.get('/add-product',(req,res,next)=>{
  })
  
  router.post('/product',(req,res,next)=>{
+   const product=new Product(req.body);
+   product.save()
     console.log(req.body)
     res.redirect('/')
  })
