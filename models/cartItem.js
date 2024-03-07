@@ -1,13 +1,16 @@
 const Sequelize=require('sequelize');
 const sq=require('../util/database');
 
-const Cart=sq.define('cart',{
+const CartItem=sq.define('cartItem',{
   id:{
     type:Sequelize.INTEGER,
     autoIncrement:true,
     allowNull:false,
     primaryKey:true
+  },
+  quantity:{
+    type:Sequelize.INTEGER
   }
 })
 
-module.exports=Cart;
+module.exports=CartItem;

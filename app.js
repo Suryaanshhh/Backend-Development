@@ -14,6 +14,8 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const Product = require('./models/product');
 const User = require('./models/user');
+const Cart=require('./models/cart');
+const CartItem=require('./models/cartItem');
 const db = require('./util/database');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,18 +33,26 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasMany(Product)
+User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product,{ through:CartItem});
+Product.belongsToMany(Cart,{ through:CartItem});
+
 
 db//.sync({force:true})
-    .sync().then(result => {
+    .sync()
+    .then(result => {
         return User.findByPk(1)
     }).then(user => {
         if (!user) {
             User.create({ name: 'max', email: 'test@test.com' });
         }
         return user;
-    }).then(result => {
-        console.log(result);
-        app.listen(3000);
-    })
+    }).then(user => {
+       return user.createCart()
+        
+    }).then((cart)=>{
+        app.listen(4000)
+    }).catch(err=>console.log(err))
 
